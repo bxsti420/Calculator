@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Document</title>
+
+    <script>
+        function appendOperation(operation){
+            document.getElementById("result").innerHTML += operation;
+        }
+
+        function deleteLast(){
+            let string = document.getElementById("result").innerHTML;
+            let string2 = string.split(" ");
+            let eingabe;
+            
+
+            if(string2[string2.length-1] === ""){
+                for(let i = 0;i<string2.length-2;i++){
+                    eingabe[i] = string2[i];
+                }
+            }else{
+                eingabe = string2;
+            }
+
+            let rest = eingabe[0];
+            for ( let i=0; i<eingabe.length-1; i++ ) {
+                if(i == 0){
+                    rest = eingabe[i];
+                }else{
+                    rest = rest + " " + eingabe[i];
+                }
+               
+            }
+            document.getElementById("result").innerHTML = rest;
+        }
+
+        function calculate(){
+            let string = document.getElementById("result").innerHTML;
+            let string2 = string.split(" ");
+            document.getElementById("result").innerHTML = calculateRek(string2);
+        }
+
+        function calculateRek(string){
+            
+            if(string.length == 1){
+                return parseInt(string[0]);
+            }else{
+                return operationteile(string);
+            }
+        }
+
+        function operationteile(string){
+
+            let plus = 0;
+            let mal = 0;
+
+            for(let i = 0;i<string.length;i++){
+                if(string[i] === "+" || string[i] === "-"){  
+                    plus++;
+                }else if(string[i] === "*"|| string[i] === "/") {
+                    mal++;
+                }
+            }
+            if(plus !== 0){
+                for(let i = 0;i<string.length;i++){
+                    if(string[i] === "+"|| string[i] === "-"){
+                        return teile(string,i,string[i]);
+                    }
+                }
+                return null;
+            }else if(mal !== 0){
+                for(let i = 0;i<string.length;i++){
+                    if(string[i] === "*"|| string[i] === "/"){
+                        return teile(string,i,string[i]);
+                    }
+                }
+                return null;
+            }
+
+        }
+
+        function teile(string,i,op){
+            let splitted1 = string.slice(0,i);
+            let splitted = string.slice(i+1,string.length);
+            
+
+            switch(op){
+                case "*":
+                    return calculateRek(splitted1)*calculateRek(splitted);
+                case "/":
+                    return calculateRek(splitted1)/calculateRek(splitted);
+                case "+":
+                    return calculateRek(splitted1)+calculateRek(splitted);
+                case "-":
+                    return calculateRek(splitted1)-calculateRek(splitted);
+            }  
+            
+            
+
+        }
+
+        function reset(){
+            document.getElementById("result").innerHTML = "";
+        }
+            
+    </script>
+</head>
+
+<body onload="reset()">
+
+    <div id = "result">
+       0 
+    </div>
+
+    <div id = "table">
+        <table>
+            <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td onclick = "reset()">RESET</td>
+            </tr>
+            <tr>
+                <td onclick="appendOperation(7)">7</td>
+                <td onclick="appendOperation(8)">8</td>
+                <td onclick="appendOperation(9)">9</td>
+                <td onclick="deleteLast()">DEL</td>
+            </tr>
+    
+    
+            <tr>
+                <td onclick="appendOperation(4)">4</td>
+                <td onclick="appendOperation(5)">5</td>
+                <td onclick="appendOperation(6)">6</td>
+                <td onclick="appendOperation(' * ')" class="highlight">x</td>
+            </tr>
+    
+            <tr>
+                <td onclick="appendOperation(1)">1</td>
+                <td onclick="appendOperation(2)">2</td>
+                <td onclick="appendOperation(3)">3</td>
+                <td onclick="appendOperation(' / ')" class="highlight">/</td>
+            </tr>
+    
+    
+            <tr>
+                <td onclick="appendOperation(0)">0</td>
+                <td onclick="appendOperation(' + ')" class="highlight">+</td>
+                <td onclick="calculate()" id="resultArea">=</td>
+                <td onclick="appendOperation(' - ')" class="highlight">-</td>
+            </tr>
+    
+        </table>
+    </div>
+    
+
+    
+</body>
+</html>
