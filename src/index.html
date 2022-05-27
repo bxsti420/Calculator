@@ -40,8 +40,40 @@
 
         function calculate(){
             let string = document.getElementById("result").innerHTML;
-            let string2 = string.split(" ");
-            document.getElementById("result").innerHTML = calculateRek(string2);
+            let string1 = string.split(" ");
+            let string2 = [];
+            let anyklammer = true;
+            while(anyklammer){
+                let klammercounter = 0;
+                let klammeroffen;
+                for(let i = 0;i<string1.length;i++){
+                    if(string1[i] == "{"){
+                        klammercounter++,
+                        klammeroffen = i;
+                    }
+                    if(string1[i] == "}"){
+                        if(klammeroffen != null){
+                            for(let j = 0;j<klammeroffen;j++){
+                                string2.push(string1[j]);
+                            }
+                            string2.push(calculateRek(string1.slice(klammeroffen+1,i)));
+                            
+                            for(let j = i+1;j<string1.length;j++){
+                                string2.push(string1[j]);
+                            }
+                            
+                            string1 = aufrücken(string2);
+                        }else return SyntaxError;
+                    }
+                }
+                if(klammercounter == 0){
+                    anyklammer = false;
+                }
+            }
+            document.getElementById("lol").innerHTML=string1;
+            document.getElementById("result").innerHTML = calculateRek(string1);
+            
+
         }
 
         function calculateRek(string){
@@ -80,17 +112,14 @@
                 }
                 return null;
             }
-
         }
 
         function teile(string,i,op){
             let splitted1 = string.slice(0,i);
             let splitted = string.slice(i+1,string.length);
-            
-
             switch(op){
                 case "*":
-                    return calculateRek(splitted1)*calculateRek(splitted);
+                        return calculateRek(splitted1)*calculateRek(splitted);
                 case "/":
                     return calculateRek(splitted1)/calculateRek(splitted);
                 case "+":
@@ -98,10 +127,24 @@
                 case "-":
                     return calculateRek(splitted1)-calculateRek(splitted);
             }  
-            
-            
-
         }
+
+        function aufrücken(stringArray){
+            let aufgerückt = [];
+            let counterIndexEmpty = 0;
+            for(let i = 0;i<stringArray.length;i++){
+                if(stringArray[i] == ""){
+                    counterIndexEmpty++;
+                }else{
+                    aufgerückt[i-counterIndexEmpty] = stringArray[i];
+                }
+                
+            }
+            return aufgerückt;
+        }
+           
+        
+
 
         function reset(){
             document.getElementById("result").innerHTML = "";
@@ -116,12 +159,16 @@
        0 
     </div>
 
+    <div id = "lol">
+        ad 
+     </div>
+
     <div id = "table">
         <table>
             <tr>
                 <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td onclick="appendOperation(' { ')">(</td>
+                <td onclick="appendOperation(' } ')">)</td>
                 <td onclick = "reset()">RESET</td>
             </tr>
             <tr>
