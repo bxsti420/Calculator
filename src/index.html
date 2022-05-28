@@ -70,18 +70,27 @@
                     anyklammer = false;
                 }
             }
-            document.getElementById("lol").innerHTML=string1;
+            document.getElementById("lol").innerHTML = string1;
             document.getElementById("result").innerHTML = calculateRek(string1);
             
 
         }
 
-        function calculateRek(string){
+        function calculateRek(array){
+
             
-            if(string.length == 1){
-                return parseInt(string[0]);
+            if(array.length == 1){
+                if(typeof array[0] == "string"){
+                    if(array[0].startsWith('W')){
+                        const chararray = Array.from(array[0]);
+                        return Math.sqrt(parseInt(chararray[1]));
+                    }
+                }
+                return parseInt(array[0]);
+                
+                
             }else{
-                return operationteile(string);
+                return operationteile(array);
             }
         }
 
@@ -166,7 +175,7 @@
     <div id = "table">
         <table>
             <tr>
-                <td>-</td>
+                <td onclick="appendOperation('W')">WURZEL</td>
                 <td onclick="appendOperation(' { ')">(</td>
                 <td onclick="appendOperation(' } ')">)</td>
                 <td onclick = "reset()">RESET</td>
